@@ -1,0 +1,22 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <main>
+      <form class="media-controls">
+        <div class="media-buttons">
+          {{#each buttons}}
+            <button>{{this}}</button>
+          {{/each}}
+        </div>
+      </form>
+      <div class="branding">
+        <p><strong>QRemote</strong></p>
+        <p>{{hostname}} ({{ip}}:{{port}})</p>
+      </div></main>
+  </body>
+</html>

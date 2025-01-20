@@ -1,0 +1,28 @@
+body {
+  background-image: radial-gradient(circle at top center, #565462, #353538);
+  color: white;
+  font-family: system-ui;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
+  height: 100dvh;
+}
+
+.media-controls {
+  grid-column: 2 / 5;
+  grid-row: 1 / 17;
+}
+
+.media-buttons {
+  grid-column: 2 / 5;
+  grid-row: 1 / 17;
+}
+
+.branding {
+  text-align: center;
+  grid-column: 3 / 4;
+  grid-row: 18 / 20;
+}
