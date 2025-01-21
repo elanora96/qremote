@@ -37,3 +37,9 @@ I completely jacked the idea for this project from [akleventis/lan_mac_remote](h
 ## How it works
 
 QRemote starts a local web server (powered by [axum](https://crates.io/crates/axum)) which serves the remote's webpage and creates a WebSocket for I/O to be registered. When a remote button is pressed, the server uses [enigo](https://crates.io/crates/enigo) to simulate that input as the corresponding keyboard media key. Most players will respect keyboard media keys without any additional setup.
+
+## Screenshots
+
+<p align="center">
+    <img height=500 src="assets/promotional_screenshot_1.jpg">
+</p>
