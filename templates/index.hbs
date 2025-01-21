@@ -3,6 +3,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/app.js"></script>/>
     <title>{{title}}</title>
   </head>
   <body>
@@ -10,13 +11,14 @@
       <form class="media-controls">
         <div class="media-buttons">
           {{#each buttons}}
-            <button>{{this}}</button>
+            <button data-value="{{this}}">{{this}}</button>
           {{/each}}
         </div>
       </form>
       <div class="branding">
         <p><strong>QRemote</strong></p>
         <p>{{hostname}} ({{ip}}:{{port}})</p>
-      </div></main>
+      </div>
+    </main>
   </body>
 </html>
