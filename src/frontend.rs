@@ -2,7 +2,7 @@ use handlebars::Handlebars;
 use serde_json::json;
 use std::sync::Arc;
 
-use crate::HostState;
+use super::HostState;
 
 pub fn build_template() -> Arc<Handlebars<'static>> {
     Arc::new({

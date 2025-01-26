@@ -30,7 +30,7 @@ A multi-platform (Linux (X11/Wayland), macOS, and Windows) zero setup remote for
 
 Simply run `qremote`, scan the QR code with your phone, and control your media right from your phone or other device's browser.
 
-## Massive thank you to [akleventis](https://github.com/akleventis)
+## Massive thank you to [Tooper](https://github.com/akleventis)
 
 I completely jacked the idea for this project from [akleventis/lan_mac_remote](https://github.com/akleventis/lan_mac_remote). Thank you for showing it to me, sorry to Zuckerberg you
 

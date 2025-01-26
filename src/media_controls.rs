@@ -1,32 +1,14 @@
+use super::KEY_MAP;
 use enigo::{Direction::Click, Enigo, Key, Keyboard, Settings};
-use std::collections::HashMap;
 
-struct AllowedKey {
-    key_name: String,
-    key_code: Key,
-}
-
-struct AllowedKeys {
-    keys: Vec<AllowedKey>,
-}
-
-impl AllowedKeys {
-    fn get_key_by_name(&self, key_name: &str) {}
-}
-
-pub fn idk() {
+pub fn str_to_keypress(input: &str) {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
 
-    let allowed = AllowedKeys {
-        keys: vec![AllowedKey {
-            key_name: String::from("Next"),
-            key_code: Key::MediaNextTrack,
-        }],
-    };
+    let mut keypress = |key: Key| enigo.key(key, Click);
 
-    let mut keypress = |key| enigo.key(key, Click);
+    let matched_key = KEY_MAP.get(input).unwrap().clone();
 
-    if let Err(e) = keypress(Key::MediaNextTrack) {
+    if let Err(e) = keypress(matched_key) {
         println!("{e}")
     }
 }
