@@ -33,40 +33,9 @@ pub async fn ws_handler(
     ws.on_upgrade(move |socket| handle_socket(socket, addr))
 }
 
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr) {
-    if socket
-        .send(Message::Ping(Bytes::from_static(&[1, 2, 3])))
-        .await
-        .is_ok()
-    {
-        println!("Pinged {who}...")
-    } else {
-        println!("Could not send ping {who}");
-        return;
-    }
-
-    if let Some(msg) = socket.recv().await {
-        if let Ok(msg) = msg {
-            if process_message(msg, who).is_break() {
-                return;
-            }
-        } else {
-            println!("client {who} abruptly disconnected")
-        }
-    }
-
-    for i in 1..5 {
-        if socket
-            .send(Message::Text(format!("Hi {i} times!").into()))
-            .await
-            .is_err()
-        {
-            println!("client {who} abruptly disconnected");
-            return;
-        }
-        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-    }
-
+// Split the socket to send and recieve at the same time
+// Then handle sending and recieving
+async fn handle_socket(socket: WebSocket, who: SocketAddr) {
     let (mut sender, mut receiver) = socket.split();
 
     let mut send_task = tokio::spawn(async move {

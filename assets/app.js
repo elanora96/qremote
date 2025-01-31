@@ -46,7 +46,11 @@ function createWebSocket(state) {
   buttons.forEach((button) => {
     button.addEventListener("click", (_) => {
       const pressedKey = button.dataset.value;
+      console.log(pressedKey);
       state.ws.send(pressedKey);
     });
   });
+
+  const form = document.getElementById("form");
+  form.addEventListener("submit", (event) => event.preventDefault());
 })();
