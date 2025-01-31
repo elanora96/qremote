@@ -9,11 +9,25 @@ use qremote::{
     websockets::ws_handler,
     HostState,
 };
-use std::sync::Arc;
-use tower_http::services::ServeDir;
+use std::{net::SocketAddr, sync::Arc};
+use tower_http::{
+    services::ServeDir,
+    trace::{DefaultMakeSpan, TraceLayer},
+};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() {
+    // TODO: Hide behind debug flag
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                format!("{}=debug,tower_http=debug", env!("CARGO_CRATE_NAME")).into()
+            }),
+        )
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+
     let handlebars = build_template();
 
     let host_state = Arc::new(HostState {
@@ -32,7 +46,11 @@ async fn main() {
             }),
         )
         .route("/ws", any(ws_handler))
-        .nest_service("/assets", ServeDir::new("assets"));
+        .nest_service("/assets", ServeDir::new("assets"))
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(DefaultMakeSpan::default().include_headers(true)),
+        );
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", host_state.port))
         .await
@@ -40,5 +58,10 @@ async fn main() {
 
     host_state.print_host_ready();
 
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
 }

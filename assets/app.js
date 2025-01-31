@@ -10,7 +10,7 @@ class AppState {
  * @param {AppState} state
  */
 function createWebSocket(state) {
-  const ws = new WebSocket(window.location.href);
+  const ws = new WebSocket(`ws://${window.location.host}/ws`);
 
   Object.assign(ws, {
     onopen: () => {
