@@ -1,8 +1,6 @@
 use enigo::Key;
-use lazy_static::lazy_static;
 use qrcode::{render::unicode, QrCode};
-use std::collections::HashMap;
-use std::{ffi::OsString, net::IpAddr};
+use std::{collections::HashMap, ffi::OsString, net::IpAddr, sync::OnceLock};
 
 pub mod frontend;
 pub mod media_controls;
@@ -29,13 +27,13 @@ impl HostState {
     }
 }
 
-lazy_static! {
-    pub static ref KEY_MAP: HashMap<String, Key> = [
-        ("Stop".to_string(), Key::MediaStop),
-        ("PlayPause".to_string(), Key::MediaPlayPause),
-        ("NextTrack".to_string(), Key::MediaNextTrack),
-    ]
-    .iter()
-    .cloned()
-    .collect();
+pub fn key_map() -> &'static HashMap<String, Key> {
+    static KEY_MAP: OnceLock<HashMap<String, Key>> = OnceLock::new();
+    KEY_MAP.get_or_init(|| {
+        let mut m = HashMap::new();
+        m.insert("Stop".to_string(), Key::MediaStop);
+        m.insert("PlayPause".to_string(), Key::MediaPlayPause);
+        m.insert("NextTrack".to_string(), Key::MediaNextTrack);
+        m
+    })
 }

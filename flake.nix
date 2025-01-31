@@ -1,71 +1,45 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    crane = {
-      url = "github:ipetkov/crane";
+    systems.url = "github:nix-systems/default";
+    rust-flake = {
+      url = "github:juspay/rust-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-      rust-overlay,
-      crane,
-      ...
-    }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        overlays = [ (import rust-overlay) ];
-        pkgs = import nixpkgs { inherit system overlays; };
-
-        rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-
-        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
-        src = craneLib.cleanCargoSource ./.;
-
-        commonArgs = {
-          inherit src;
-          strictDeps = true;
-          nativeBuildInputs = [ rustToolchain ];
-          buildInputs = [ ];
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = import inputs.systems;
+      imports = [
+        inputs.rust-flake.flakeModules.default
+        inputs.rust-flake.flakeModules.nixpkgs
+      ];
+      perSystem =
+        {
+          self',
+          pkgs,
+          ...
+        }:
+        {
+          rust-project.crates."qremote".crane.args = {
+            nativeBuildInputs = [
+              pkgs.xdotool
+              pkgs.libxkbcommon
+            ];
+          };
+          packages.default = self'.packages.qremote;
+          devShells.default = pkgs.mkShell {
+            name = "qremote-shell";
+            inputsFrom = [
+              self'.devShells.rust
+            ];
+          };
         };
-
-        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
-
-        bin = craneLib.buildPackage (
-          commonArgs
-          // {
-            inherit cargoArtifacts;
-          }
-        );
-      in
-      {
-        checks = {
-          inherit bin;
-        };
-
-        packages = {
-          inherit bin;
-          default = bin;
-        };
-
-        apps.default = flake-utils.lib.mkApp {
-          drv = bin;
-        };
-
-        devShells.default = craneLib.devShell {
-          checks = self.checks.${system};
-
-          packages = [];
-        };
-      }
-    );
+    };
 }
