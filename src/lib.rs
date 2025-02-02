@@ -40,11 +40,11 @@ pub struct ClientEventMessage {
 impl ClientEventMessage {
     pub fn execute(&self) {
         match self.event_type.as_str() {
-            "clicked" => {
+            "click" => {
                 let ck = self.clicked_key.clone().unwrap();
                 media_controls::str_to_keypress(&ck);
             }
-            _ => println!("Unrecognized event_type!"),
+            _ => println!("Unrecognized event_type! {:?}", self.event_type),
         }
     }
 }
@@ -53,9 +53,17 @@ pub fn key_map() -> &'static HashMap<String, Key> {
     static KEY_MAP: OnceLock<HashMap<String, Key>> = OnceLock::new();
     KEY_MAP.get_or_init(|| {
         let mut m = HashMap::new();
-        m.insert("Stop".to_string(), Key::MediaStop);
-        m.insert("PlayPause".to_string(), Key::MediaPlayPause);
-        m.insert("NextTrack".to_string(), Key::MediaNextTrack);
+        m.insert("MediaNextTrack".to_string(), Key::MediaNextTrack);
+        m.insert("MediaPlayPause".to_string(), Key::MediaPlayPause);
+        m.insert("MediaPrevTrack".to_string(), Key::MediaPrevTrack);
+        m.insert("MediaStop".to_string(), Key::MediaStop);
+        m.insert("VolumeDown".to_string(), Key::VolumeDown);
+        m.insert("VolumeMute".to_string(), Key::VolumeMute);
+        m.insert("VolumeUp".to_string(), Key::VolumeUp);
+        m.insert("UpArrow".to_string(), Key::UpArrow);
+        m.insert("DownArrow".to_string(), Key::DownArrow);
+        m.insert("LeftArrow".to_string(), Key::LeftArrow);
+        m.insert("RightArrow".to_string(), Key::RightArrow);
         m
     })
 }

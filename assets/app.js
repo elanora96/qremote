@@ -23,8 +23,8 @@ class ClientEventMessage {
    * @param {string[]} [modifiers] - An array of active modifier keys (optional)
    */
   constructor(eventType, clickedKey, modifiers) {
-    this.type = eventType;
-    this.pressedKey = clickedKey;
+    this.eventType = eventType;
+    this.clickedKey = clickedKey;
     this.modifiers = modifiers;
   }
 
