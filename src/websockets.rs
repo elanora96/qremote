@@ -1,16 +1,14 @@
-use std::{net::SocketAddr, ops::ControlFlow};
-
+use super::ClientEventMessage;
 use axum::{
-    body::Bytes,
     extract::{
         ws::{CloseFrame, Message, Utf8Bytes, WebSocket, WebSocketUpgrade},
         ConnectInfo,
     },
     response::IntoResponse,
 };
-
 use axum_extra::{headers, TypedHeader};
 use futures::{SinkExt, StreamExt};
+use std::{net::SocketAddr, ops::ControlFlow};
 
 /// The handler for the HTTP request (this gets called when the HTTP request lands at the start
 /// of websocket negotiation). After this completes, the actual switching from HTTP to
@@ -33,71 +31,65 @@ pub async fn ws_handler(
     ws.on_upgrade(move |socket| handle_socket(socket, addr))
 }
 
-// Split the socket to send and recieve at the same time
-// Then handle sending and recieving
+/// Split the socket to send and recieve at the same time
+/// Then handle sending and recieving
 async fn handle_socket(socket: WebSocket, who: SocketAddr) {
     let (mut sender, mut receiver) = socket.split();
 
-    let mut send_task = tokio::spawn(async move {
-        let n_msg = 20;
-        for i in 0..n_msg {
+    let send_task = tokio::spawn(async move {
+        #[allow(while_true)]
+        while true {
             if sender
-                .send(Message::Text(format!("Server message {i} ...").into()))
+                .send(Message::Text(format!("I'm annoying").into()))
                 .await
                 .is_err()
             {
-                return i;
+                println!("Sending close to {who}...");
+                if let Err(e) = sender
+                    .send(Message::Close(Some(CloseFrame {
+                        code: axum::extract::ws::close_code::NORMAL,
+                        reason: Utf8Bytes::from_static("Goodbye"),
+                    })))
+                    .await
+                {
+                    println!("Could not send Close due to {e}, probably it is ok?");
+                }
+                break;
             }
 
             tokio::time::sleep(std::time::Duration::from_millis(300)).await;
         }
-
-        println!("Sending close to {who}...");
-        if let Err(e) = sender
-            .send(Message::Close(Some(CloseFrame {
-                code: axum::extract::ws::close_code::NORMAL,
-                reason: Utf8Bytes::from_static("Goodbye"),
-            })))
-            .await
-        {
-            println!("Could not send Close due to {e}, probably it is ok?");
-        }
-        n_msg
     });
 
-    let mut recv_task = tokio::spawn(async move {
-        let cnt = 0;
+    let recv_task = tokio::spawn(async move {
         while let Some(Ok(msg)) = receiver.next().await {
             if process_message(msg, who).is_break() {
                 break;
             }
         }
-        cnt
     });
 
     tokio::select! {
-        rv_a = (&mut send_task) => {
-            match rv_a {
-                Ok(a) => println!("{a} message sent to {who}"),
-                Err(a) => println!("Error sending messages {a:?}")
-            }
-            recv_task.abort();
+        _ = send_task => {
+            println!("send_task completed")
         },
-        rv_b = (&mut recv_task) => {
-            match rv_b {
-                Ok(b) => println!("Recieved {b} messages"),
-                Err(b) => println!("Error receiving messages {b:?}")
-            }
-            send_task.abort();
+        _ = recv_task => {
+            println!("recv_task completed")
         }
     }
 }
 
+/// Implementations for ws::Message
 fn process_message(msg: Message, who: SocketAddr) -> ControlFlow<(), ()> {
     match msg {
-        Message::Text(t) => {
-            println!(">>> {who} sent str: {t:?}");
-        }
+        Message::Text(t) => match serde_json::from_str::<ClientEventMessage>(&t) {
+            Ok(event) => {
+                event.execute();
+            }
+            Err(_) => {
+                println!(">>> {who} sent str: {t:?}");
+            }
+        },
         Message::Binary(d) => {
             println!(">>> {} sent {} bytes: {:?}", who, d.len(), d);
         }

@@ -1,4 +1,11 @@
+/**
+ * Our app's state object
+ * Contains our WebSocket and a method to refresh it
+ */
 class AppState {
+  /**
+   * @type {WebSocket}
+   */
   ws = createWebSocket(this);
 
   refreshSocket() {
@@ -7,7 +14,34 @@ class AppState {
 }
 
 /**
- * @param {AppState} state
+ * An event to be sent to the server
+ */
+class ClientEventMessage {
+  /**
+   * @param {string} eventType - The event's type
+   * @param {string} [clickedKey] - Key that was clicked (optional)
+   * @param {string[]} [modifiers] - An array of active modifier keys (optional)
+   */
+  constructor(eventType, clickedKey, modifiers) {
+    this.type = eventType;
+    this.pressedKey = clickedKey;
+    this.modifiers = modifiers;
+  }
+
+  /**
+   * Method for JSON.stringify()
+   * @returns {string} JSON stringified EventMessage
+   */
+  toJSONString() {
+    return JSON.stringify(this);
+  }
+}
+
+/**
+ * Creates an autoretrying WebSocket tied to current AppState
+ * It's got recursion that I hope the GC can follow :D
+ * @param {AppState} state - AppState in need of a new WebSocket
+ * @returns {WebSocket} New WebSocket with methods assigned
  */
 function createWebSocket(state) {
   const ws = new WebSocket(`ws://${window.location.host}/ws`);
@@ -45,12 +79,19 @@ function createWebSocket(state) {
 
   buttons.forEach((button) => {
     button.addEventListener("click", (_) => {
-      const pressedKey = button.dataset.value;
-      console.log(pressedKey);
-      state.ws.send(pressedKey);
+      const clickedKey = button.dataset.value;
+      const msg = new ClientEventMessage("click", clickedKey);
+      console.log(msg.toJSONString());
+      state.ws.send(msg.toJSONString());
     });
   });
 
+  // TODO: Add modifier key logic
+
+  /**
+   * The joys of using an HTML form cause it feels semantic
+   * But not wanting anything it provides
+   */
   const form = document.getElementById("form");
   form.addEventListener("submit", (event) => event.preventDefault());
 })();

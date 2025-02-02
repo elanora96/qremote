@@ -1,5 +1,6 @@
 use enigo::Key;
 use qrcode::{render::unicode, QrCode};
+use serde::Deserialize;
 use std::{collections::HashMap, ffi::OsString, net::IpAddr, sync::OnceLock};
 
 pub mod frontend;
@@ -24,6 +25,27 @@ impl HostState {
 
     pub fn print_host_ready(&self) {
         println!("{}{}", &self.get_remote_url(), &self.get_qrcode_image());
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ClientEventMessage {
+    #[serde(rename = "eventType")]
+    event_type: String,
+    #[serde(rename = "clickedKey")]
+    clicked_key: Option<String>,
+    // modifiers: Option<Vec<String>>, // TODO
+}
+
+impl ClientEventMessage {
+    pub fn execute(&self) {
+        match self.event_type.as_str() {
+            "clicked" => {
+                let ck = self.clicked_key.clone().unwrap();
+                media_controls::str_to_keypress(&ck);
+            }
+            _ => println!("Unrecognized event_type!"),
+        }
     }
 }
 

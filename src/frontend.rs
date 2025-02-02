@@ -1,8 +1,8 @@
+use super::key_map;
+use super::HostState;
 use handlebars::Handlebars;
 use serde_json::json;
 use std::sync::Arc;
-
-use super::HostState;
 
 pub fn build_template() -> Arc<Handlebars<'static>> {
     Arc::new({
@@ -17,7 +17,7 @@ pub async fn serve_frontend(
     hs: Arc<HostState>,
     hb: Arc<Handlebars<'static>>,
 ) -> axum::response::Html<String> {
-    let buttons = ["volume_up", "volume_down", "pause_play", "stop"];
+    let buttons: Vec<&String> = key_map().keys().collect();
 
     let data = json!({
         "title": "QRemote",
