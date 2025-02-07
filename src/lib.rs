@@ -64,6 +64,7 @@ pub fn key_map() -> &'static HashMap<String, Key> {
         m.insert("DownArrow".to_string(), Key::DownArrow);
         m.insert("LeftArrow".to_string(), Key::LeftArrow);
         m.insert("RightArrow".to_string(), Key::RightArrow);
+        m.insert("Return".to_string(), Key::Return);
         m
     })
 }

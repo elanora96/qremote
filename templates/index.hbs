@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/assets/styles.css" />
-    <script type="module" src="/assets/app.js"></script>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='stylesheet' href='/assets/styles.css' />
+    <script type='module' src='/assets/app.js'></script>
     <title>{{title}}</title>
   </head>
   <body>
     <main>
-      <form class="media-controls" id="form">
-        <div class="media-buttons">
-          {{#each buttons}}
-            <button data-value="{{this}}">{{this}}</button>
-          {{/each}}
-        </div>
+      <form class='media-controls' id='form'>
+        {{#each buttons}}
+          <button class='media-button' data-value='{{this}}'>{{this}}</button>
+        {{/each}}
       </form>
-      <div class="branding">
+      <div class='branding'>
         <p><strong>QRemote</strong></p>
         <p>{{hostname}} ({{ip}}:{{port}})</p>
       </div>

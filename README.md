@@ -40,6 +40,9 @@ QRemote starts a local web server (powered by [axum](https://crates.io/crates/ax
 
 ## Screenshots
 
+Yes I am aware it is ugly rn
+
 <p align="center">
-    <img height=500 src="assets/promotional_screenshot_1.jpg">
+    <img height=400 src="assets/qr-remote-screen.png">
+    <img height=500 src="assets/promotional_screenshot.png">
 </p>
