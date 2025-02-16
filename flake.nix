@@ -24,14 +24,34 @@
         {
           self',
           pkgs,
+          lib,
+          config,
           ...
         }:
         {
-          rust-project.crates."qremote".crane.args = {
-            nativeBuildInputs = [
-              pkgs.xdotool
-              pkgs.libxkbcommon
-            ];
+          rust-project = {
+            src =
+              let
+                filterCargoSources = path: type:
+                  config.rust-project.crane-lib.filterCargoSources path type
+                  && !(lib.hasSuffix ".toml" path && !lib.hasSuffix "Cargo.toml" path);
+              in
+              lib.cleanSourceWith {
+              src = inputs.self;
+                  filter = path: type:
+                    filterCargoSources path type
+                    || lib.hasSuffix "templates/index.hbs" path
+                    || lib.hasSuffix "assets/styles.css" path
+                    || lib.hasSuffix "assets/app.js" path
+                    ;
+              };
+
+            crates."qremote".crane.args = {
+              nativeBuildInputs = [
+                pkgs.xdotool
+                pkgs.libxkbcommon
+              ];
+            };
           };
           packages.default = self'.packages.qremote;
           devShells.default = pkgs.mkShell {
