@@ -4,11 +4,11 @@ The year is 2014. You have a girl over. First time in a while. You were daring a
 
 That bet did not pay off. The version you found has a funky audio track that requires you to keep adjusting the volume between the drumming and the audio.
 
-Earlier this year you took Reddit's advice and bought a banging sound system with a cheap Class T amp. It sounds great, something to really brag about in the comments of Fantano's review for your 3rd favorite album of the year.
+Earlier this year you took Reddit's advice and bought a banging sound system with a cheap Class D amp. It sounds great, something to really brag about in the comments of Fantano's review for your 3rd favorite album of the year.
 
 But it does not have a remote.
 
-The volume must be adjusted manually on the dial right under your TV. This isn't typically a problem but it _really is tonight_. The first couple of times you get up you're really self-conscious about it.
+The volume must be adjusted manually on the dial right under your TV. This isn't typically a problem, but it _really is tonight_. The first couple of times you get up you're really self-conscious about it.
 
 ```
 Don't look weird
@@ -43,6 +43,6 @@ QRemote starts a local web server (powered by [axum](https://crates.io/crates/ax
 Yes I am aware it is ugly rn
 
 <p align="center">
-    <img height=400 src="assets/qr-remote-screen.png">
-    <img height=500 src="assets/promotional_screenshot.png">
+    <img height=400 src="assets/qr-remote-screen.png" alt="Screenshot of a terminal running qremote">
+    <img height=500 src="assets/promotional_screenshot.png" alt="Screenshot of a mobile browser showing qremote's UI">
 </p>

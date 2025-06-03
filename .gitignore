@@ -1,2 +1,14 @@
+# Rust and Nix
 /target
 /result
+/debug
+
+# Common Editors
+/.idea
+/.vscode
+/out
+
+# KDE and MacOS
+.directory
+.DS_Store
+
