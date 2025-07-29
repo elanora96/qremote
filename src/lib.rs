@@ -1,5 +1,5 @@
 use enigo::Key;
-use qrcode::{render::unicode, QrCode};
+use qrcode::{QrCode, render::unicode};
 use serde::Deserialize;
 use std::{collections::HashMap, ffi::OsString, net::IpAddr, sync::OnceLock};
 

@@ -47,13 +47,6 @@
                   || lib.hasSuffix "assets/app.js" path;
               };
 
-            # crane-lib = (inputs.rust-flake.inputs.crane.mkLib pkgs).overrideToolchain (
-            #   p:
-            #   p.rust-bin.stable.latest.default.override {
-            #     targets = [ "x86_64-unknown-linux-musl" ];
-            #   }
-            # );
-
             crates."qremote".crane.args = {
               strictDeps = true;
               buildInputs = with pkgs; [
@@ -61,19 +54,9 @@
               ];
               nativeBuildInputs = with pkgs; [
                 pkg-config
-              #   makeWrapper
-              # ] ++ (with pkgsStatic; [
-              #   bashInteractive
-              #   cmake
-              #   makeWrapper
-              #   makeShellWrapper
-              #   ninja
                 (libxkbcommon.override { withWaylandTools = true; })
                 xdotool
               ];
-
-              # CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
-              # CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
             };
           };
           packages.default = self'.packages.qremote;

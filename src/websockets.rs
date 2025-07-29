@@ -1,13 +1,12 @@
 use super::ClientEventMessage;
 use axum::{
     extract::{
-        ws::{CloseFrame, Message, Utf8Bytes, WebSocket, WebSocketUpgrade},
         ConnectInfo,
+        ws::{Message, WebSocket, WebSocketUpgrade},
     },
     response::IntoResponse,
 };
-use axum_extra::{headers, TypedHeader};
-use futures::{SinkExt, StreamExt};
+use axum_extra::{TypedHeader, headers};
 use std::{net::SocketAddr, ops::ControlFlow};
 
 /// The handler for the HTTP request (this gets called when the HTTP request lands at the start
@@ -31,50 +30,10 @@ pub async fn ws_handler(
     ws.on_upgrade(move |socket| handle_socket(socket, addr))
 }
 
-/// Split the socket to send and recieve at the same time
-/// Then handle sending and recieving
-async fn handle_socket(socket: WebSocket, who: SocketAddr) {
-    let (mut sender, mut receiver) = socket.split();
-
-    let send_task = tokio::spawn(async move {
-        #[allow(while_true)]
-        while true {
-            if sender
-                .send(Message::Text(format!("I'm annoying").into()))
-                .await
-                .is_err()
-            {
-                println!("Sending close to {who}...");
-                if let Err(e) = sender
-                    .send(Message::Close(Some(CloseFrame {
-                        code: axum::extract::ws::close_code::NORMAL,
-                        reason: Utf8Bytes::from_static("Goodbye"),
-                    })))
-                    .await
-                {
-                    println!("Could not send Close due to {e}, probably it is ok?");
-                }
-                break;
-            }
-
-            tokio::time::sleep(std::time::Duration::from_millis(300)).await;
-        }
-    });
-
-    let recv_task = tokio::spawn(async move {
-        while let Some(Ok(msg)) = receiver.next().await {
-            if process_message(msg, who).is_break() {
-                break;
-            }
-        }
-    });
-
-    tokio::select! {
-        _ = send_task => {
-            println!("send_task completed")
-        },
-        _ = recv_task => {
-            println!("recv_task completed")
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr) {
+    while let Some(Ok(msg)) = socket.recv().await {
+        if process_message(msg, who).is_break() {
+            break;
         }
     }
 }

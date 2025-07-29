@@ -38,7 +38,7 @@ class ClientEventMessage {
 }
 
 /**
- * Creates an autoretrying WebSocket tied to current AppState
+ * Creates an auto retrying WebSocket tied to current AppState
  * It's got recursion that I hope the GC can follow :D
  * @param {AppState} state - AppState in need of a new WebSocket
  * @returns {WebSocket} New WebSocket with methods assigned

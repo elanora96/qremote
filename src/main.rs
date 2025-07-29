@@ -1,29 +1,35 @@
 use axum::{
-    routing::{any, get},
     Router,
+    routing::{any, get},
 };
+use clap::Parser;
 use gethostname::gethostname;
 use local_ip_address::local_ip;
 use qremote::{
+    HostState,
     frontend::{build_template, static_handler, ui_handler},
     websockets::ws_handler,
-    HostState,
 };
 use std::{net::SocketAddr, sync::Arc};
 use tower_http::trace::{DefaultMakeSpan, TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+#[derive(Parser, Debug)]
+#[command(version, about)]
+struct Args {
+    /// Turn debugging information on
+    #[arg(short, long, action = clap::ArgAction::Count)]
+    debug: u8,
+}
+
 #[tokio::main]
 async fn main() {
-    // TODO: Hide behind debug flag
-    tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
-                format!("{}=debug,tower_http=debug", env!("CARGO_CRATE_NAME")).into()
-            }),
-        )
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+    let args = Args::parse();
+
+    match args.debug {
+        0 => {}
+        _ => println!("Debug mode is on"),
+    }
 
     let handlebars = build_template();
 
@@ -33,7 +39,7 @@ async fn main() {
         port: 3030,
     });
 
-    let app = Router::new()
+    let mut app = Router::new()
         .route(
             "/remote",
             get({
@@ -43,11 +49,23 @@ async fn main() {
             }),
         )
         .route("/ws", any(ws_handler))
-        .route("/assets/{*path}", get(static_handler))
-        .layer(
+        .route("/assets/{*path}", get(static_handler));
+
+    if args.debug > 0 {
+        tracing_subscriber::registry()
+            .with(
+                tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                    format!("{}=debug,tower_http=debug", env!("CARGO_CRATE_NAME")).into()
+                }),
+            )
+            .with(tracing_subscriber::fmt::layer())
+            .init();
+
+        app = app.layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::default().include_headers(true)),
         );
+    }
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", host_state.port))
         .await
