@@ -18,25 +18,24 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 #[command(version, about)]
 struct Args {
     /// Turn debugging information on
-    #[arg(short, long, action = clap::ArgAction::Count)]
-    debug: u8,
+    #[arg(short, long, action = clap::ArgAction::SetTrue)]
+    debug: bool,
+
+    /// Specify the port to listen on
+    #[arg(short, long, default_value_t = 3030)]
+    port: u16,
 }
 
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
 
-    match args.debug {
-        0 => {}
-        _ => println!("Debug mode is on"),
-    }
-
     let handlebars = build_template();
 
     let host_state = Arc::new(HostState {
         hostname: gethostname(),
         ip: local_ip().unwrap(),
-        port: 3030,
+        port: args.port,
     });
 
     let mut app = Router::new()
@@ -51,7 +50,8 @@ async fn main() {
         .route("/ws", any(ws_handler))
         .route("/assets/{*path}", get(static_handler));
 
-    if args.debug > 0 {
+    if args.debug {
+        println!("Debug mode is on");
         tracing_subscriber::registry()
             .with(
                 tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
