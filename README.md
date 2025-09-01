@@ -46,3 +46,7 @@ Yes I am aware it is ugly rn
     <img height=400 src=".screenshots/qr-remote-screen.png" alt="Screenshot of a terminal running qremote">
     <img height=500 src=".screenshots/promotional_screenshot.png" alt="Screenshot of a mobile browser showing qremote's UI">
 </p>
+
+## Attributions
+
+Vectors and icons by <a href="https://github.com/mariuszostrowski/subway?ref=svgrepo.com" target="_blank">Mariusz Ostrowski</a> in CC Attribution License via <a href="https://www.svgrepo.com/" target="_blank">SVG Repo</a>

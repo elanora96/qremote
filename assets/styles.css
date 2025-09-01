@@ -28,8 +28,16 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0;
 
     background-color: var(--bg-color-darker);
+}
+
+.media-button::after {
+    display: flex;
+    justify-content: center;
+    height: 1rem;
+    filter: invert(100%);
 }
 
 .branding {
@@ -54,7 +62,7 @@ button[data-value="UpArrow"] {
     grid-row: 2;
 }
 button[data-value="UpArrow"]::after {
-    content: "⮝";
+    content: url(./icons/up-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="DownArrow"] {
@@ -62,7 +70,7 @@ button[data-value="DownArrow"] {
     grid-row: 4;
 }
 button[data-value="DownArrow"]::after {
-    content: "⮟";
+    content: url(./icons/down-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="LeftArrow"] {
@@ -70,7 +78,7 @@ button[data-value="LeftArrow"] {
     grid-row: 3;
 }
 button[data-value="LeftArrow"]::after {
-    content: "⮜";
+    content: url(./icons/left-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="RightArrow"] {
@@ -78,7 +86,7 @@ button[data-value="RightArrow"] {
     grid-row: 3;
 }
 button[data-value="RightArrow"]::after {
-    content: "⮞";
+    content: url(./icons/right-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="Return"] {
@@ -92,7 +100,7 @@ button[data-value="MediaPrevTrack"] {
     grid-column: 1;
 }
 button[data-value="MediaPrevTrack"]::after {
-    content: "⏮";
+    content: url(./icons/previous-svgrepo-com.svg);
 }
 
 button[data-value="MediaPlayPause"] {
@@ -100,7 +108,7 @@ button[data-value="MediaPlayPause"] {
     grid-column: 2;
 }
 button[data-value="MediaPlayPause"]::after {
-    content: "⏯";
+    content: url(./icons/play-svgrepo-com.svg);
 }
 
 button[data-value="MediaNextTrack"] {
@@ -108,7 +116,7 @@ button[data-value="MediaNextTrack"] {
     grid-column: 3;
 }
 button[data-value="MediaNextTrack"]::after {
-    content: "⏭";
+    content: url(./icons/next-svgrepo-com.svg);
 }
 
 button[data-value="MediaStop"] {
@@ -116,7 +124,7 @@ button[data-value="MediaStop"] {
     grid-column: 2;
 }
 button[data-value="MediaStop"]::after {
-    content: "⏹";
+    content: url(./icons/stop-svgrepo-com.svg);
 }
 
 button[data-value="VolumeUp"] {
@@ -124,7 +132,7 @@ button[data-value="VolumeUp"] {
     grid-column: 3;
 }
 button[data-value="VolumeUp"]::after {
-    content: "🕪";
+    content: url(./icons/sound-svgrepo-com.svg);
 }
 
 button[data-value="VolumeMute"] {
@@ -132,9 +140,7 @@ button[data-value="VolumeMute"] {
     grid-column: 3;
 }
 button[data-value="VolumeMute"]::after {
-    content: "Mute";
-    font-size: 1rem;
-    font-weight: bold;
+    content: url(./icons/mute-svgrepo-com.svg);
 }
 
 button[data-value="VolumeDown"] {
@@ -142,5 +148,5 @@ button[data-value="VolumeDown"] {
     grid-column: 3;
 }
 button[data-value="VolumeDown"]::after {
-    content: "🕩";
+    content: url(./icons/sound-2-svgrepo-com.svg);
 }
