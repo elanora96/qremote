@@ -41,10 +41,7 @@
                 src = inputs.self;
                 filter =
                   path: type:
-                  filterCargoSources path type
-                  || lib.hasSuffix "templates/index.hbs" path
-                  || lib.hasSuffix "assets/styles.css" path
-                  || lib.hasSuffix "assets/app.js" path;
+                  filterCargoSources path type || lib.hasInfix "templates/" path || lib.hasInfix "assets/" path;
               };
 
             crates."qremote".crane.args = {
