@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 permissions:
   contents: write
@@ -14,16 +14,16 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Nix
-      uses: cachix/install-nix-action@v30
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix develop -c cargo build --release
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: nix develop -c cargo build --release
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
             ./target/release/qremote

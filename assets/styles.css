@@ -1,152 +1,154 @@
 :root {
-    --bg-color-lighter: #565462;
-    --bg-color-darker: #353538;
+	--bg-color-lighter: #565462;
+	--bg-color-darker: #353538;
 
-    background-image: radial-gradient(
-        circle at top center,
-        var(--bg-color-lighter),
-        var(--bg-color-darker)
-    );
-    background-color: var(--bg-color-lighter);
-    color: white;
-    font-family: system-ui;
+	background-image: radial-gradient(
+		circle at top center,
+		var(--bg-color-lighter),
+		var(--bg-color-darker)
+	);
+	background-color: var(--bg-color-lighter);
+	color: white;
+	font-family: system-ui;
 }
 
 main {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 1fr);
-    grid-template-rows: repeat(auto-fit, 1fr);
-    height: 100dvh;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 1fr);
+	grid-template-rows: repeat(auto-fit, 1fr);
+	height: 100dvh;
 }
 
 .media-button {
-    font-size: 2rem;
-    text-decoration: none;
-    color: white;
-    border: solid 1px var(--bg-color-lighter);
-    border-radius: 10%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0;
+	font-size: 2rem;
+	text-decoration: none;
+	color: white;
+	border: solid 1px var(--bg-color-lighter);
+	border-radius: 10%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0;
 
-    background-color: var(--bg-color-darker);
+	background-color: var(--bg-color-darker);
 }
 
 .media-button::after {
-    display: flex;
-    justify-content: center;
-    height: 1rem;
-    filter: invert(100%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 1rem;
+	filter: invert(100%);
+	transform: scale(0.03);
 }
 
 .branding {
-    text-align: center;
-    grid-column: 1 / 4;
-    grid-row: 10 / 11;
+	text-align: center;
+	grid-column: 1 / 4;
+	grid-row: 10 / 11;
 }
 
 .media-controls {
-    grid-column: 1 / 4;
-    grid-row: 1 / 10;
-    gap: 0.5rem;
-    padding-top: 1rem;
+	grid-column: 1 / 4;
+	grid-row: 1 / 10;
+	gap: 0.5rem;
+	padding-top: 1rem;
 
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 1fr);
-    grid-template-rows: repeat(auto-fit, minmax(20px, 1fr));
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 1fr);
+	grid-template-rows: repeat(auto-fit, minmax(20px, 1fr));
 }
 
 button[data-value="UpArrow"] {
-    grid-column: 2;
-    grid-row: 2;
+	grid-column: 2;
+	grid-row: 2;
 }
 button[data-value="UpArrow"]::after {
-    content: url(./icons/up-arrow-1-svgrepo-com.svg);
+	content: url(./icons/up-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="DownArrow"] {
-    grid-column: 2;
-    grid-row: 4;
+	grid-column: 2;
+	grid-row: 4;
 }
 button[data-value="DownArrow"]::after {
-    content: url(./icons/down-arrow-1-svgrepo-com.svg);
+	content: url(./icons/down-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="LeftArrow"] {
-    grid-column: 1;
-    grid-row: 3;
+	grid-column: 1;
+	grid-row: 3;
 }
 button[data-value="LeftArrow"]::after {
-    content: url(./icons/left-arrow-1-svgrepo-com.svg);
+	content: url(./icons/left-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="RightArrow"] {
-    grid-column: 3;
-    grid-row: 3;
+	grid-column: 3;
+	grid-row: 3;
 }
 button[data-value="RightArrow"]::after {
-    content: url(./icons/right-arrow-1-svgrepo-com.svg);
+	content: url(./icons/right-arrow-1-svgrepo-com.svg);
 }
 
 button[data-value="Return"] {
-    grid-column: 2;
-    grid-row: 3;
-    background-color: var(--bg-color-lighter);
+	grid-column: 2;
+	grid-row: 3;
+	background-color: var(--bg-color-lighter);
 }
 
 button[data-value="MediaPrevTrack"] {
-    grid-row: 5;
-    grid-column: 1;
+	grid-row: 5;
+	grid-column: 1;
 }
 button[data-value="MediaPrevTrack"]::after {
-    content: url(./icons/previous-svgrepo-com.svg);
+	content: url(./icons/previous-svgrepo-com.svg);
 }
 
 button[data-value="MediaPlayPause"] {
-    grid-row: 5;
-    grid-column: 2;
+	grid-row: 5;
+	grid-column: 2;
 }
 button[data-value="MediaPlayPause"]::after {
-    content: url(./icons/play-svgrepo-com.svg);
+	content: url(./icons/play-svgrepo-com.svg);
 }
 
 button[data-value="MediaNextTrack"] {
-    grid-row: 5;
-    grid-column: 3;
+	grid-row: 5;
+	grid-column: 3;
 }
 button[data-value="MediaNextTrack"]::after {
-    content: url(./icons/next-svgrepo-com.svg);
+	content: url(./icons/next-svgrepo-com.svg);
 }
 
 button[data-value="MediaStop"] {
-    grid-row: 6;
-    grid-column: 2;
+	grid-row: 6;
+	grid-column: 2;
 }
 button[data-value="MediaStop"]::after {
-    content: url(./icons/stop-svgrepo-com.svg);
+	content: url(./icons/stop-svgrepo-com.svg);
 }
 
 button[data-value="VolumeUp"] {
-    grid-row: 7;
-    grid-column: 3;
+	grid-row: 7;
+	grid-column: 3;
 }
 button[data-value="VolumeUp"]::after {
-    content: url(./icons/sound-svgrepo-com.svg);
+	content: url(./icons/sound-svgrepo-com.svg);
 }
 
 button[data-value="VolumeMute"] {
-    grid-row: 8;
-    grid-column: 3;
+	grid-row: 8;
+	grid-column: 3;
 }
 button[data-value="VolumeMute"]::after {
-    content: url(./icons/mute-svgrepo-com.svg);
+	content: url(./icons/mute-svgrepo-com.svg);
 }
 
 button[data-value="VolumeDown"] {
-    grid-row: 9;
-    grid-column: 3;
+	grid-row: 9;
+	grid-column: 3;
 }
 button[data-value="VolumeDown"]::after {
-    content: url(./icons/sound-2-svgrepo-com.svg);
+	content: url(./icons/sound-2-svgrepo-com.svg);
 }
