@@ -1,13 +1,21 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    git-hooks-nix = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     systems.url = "github:nix-systems/default";
     rust-flake = {
-      url = "github:juspay/rust-flake";
+      url = "github:elanora96/rust-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -19,6 +27,8 @@
       imports = [
         inputs.rust-flake.flakeModules.default
         inputs.rust-flake.flakeModules.nixpkgs
+        inputs.treefmt-nix.flakeModule
+        inputs.git-hooks-nix.flakeModule
       ];
       perSystem =
         {
@@ -28,7 +38,11 @@
           config,
           ...
         }:
+        let
+          name = "qremote";
+        in
         {
+
           rust-project = {
             src =
               let
@@ -44,7 +58,7 @@
                   filterCargoSources path type || lib.hasInfix "templates/" path || lib.hasInfix "assets/" path;
               };
 
-            crates."qremote".crane.args = {
+            crates.${name}.crane.args = {
               strictDeps = true;
               buildInputs = with pkgs; [
                 pkg-config
@@ -58,10 +72,30 @@
           };
           packages.default = self'.packages.qremote;
           devShells.default = pkgs.mkShell {
-            name = "qremote-shell";
+            name = "${name}-shell";
             inputsFrom = [
               self'.devShells.rust
             ];
+          };
+          pre-commit.settings.hooks = {
+            cargo-check.enable = true;
+            clippy.enable = true;
+            treefmt.enable = true;
+          };
+
+          treefmt = {
+            projectRootFile = "rust-toolchain.toml"; # Used to find the project root
+            programs = {
+              rustfmt = {
+                enable = true;
+                edition = "2024";
+              };
+              biome.enable = true;
+              mdformat.enable = true;
+              nixfmt.enable = true;
+              statix.enable = true;
+              taplo.enable = true;
+            };
           };
         };
     };
