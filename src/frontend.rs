@@ -6,7 +6,6 @@ use axum::{
 };
 use maud::{DOCTYPE, Markup, html};
 use rust_embed::Embed;
-use std::str;
 use std::sync::Arc;
 
 #[derive(Embed)]
@@ -44,7 +43,7 @@ pub async fn ui_handler(hs: Arc<HostState>) -> Markup {
     html! {
         (DOCTYPE)
         head {
-            meta charset="UTF-8"
+            meta charset="UTF-8";
             meta name="viewport" content="width=device-width, initial-scale=1.0";
             link rel="stylesheet" href="/assets/styles.css";
             script type="module" src="/assets/app.js" {}
