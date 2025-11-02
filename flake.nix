@@ -53,9 +53,7 @@
               in
               lib.cleanSourceWith {
                 src = inputs.self;
-                filter =
-                  path: type:
-                  filterCargoSources path type || lib.hasInfix "templates/" path || lib.hasInfix "assets/" path;
+                filter = path: type: filterCargoSources path type || lib.hasInfix "assets/" path;
               };
 
             crates.${name}.crane.args = {

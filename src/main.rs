@@ -7,7 +7,7 @@ use gethostname::gethostname;
 use local_ip_address::local_ip;
 use qremote::{
     HostState,
-    frontend::{build_template, static_handler, ui_handler},
+    frontend::{static_handler, ui_handler},
     websockets::ws_handler,
 };
 use std::{net::SocketAddr, sync::Arc};
@@ -30,8 +30,6 @@ struct Args {
 async fn main() {
     let args = Args::parse();
 
-    let handlebars = build_template();
-
     let host_state = Arc::new(HostState {
         hostname: gethostname(),
         ip: local_ip().unwrap(),
@@ -43,8 +41,7 @@ async fn main() {
             "/remote",
             get({
                 let hs = Arc::clone(&host_state);
-                let hb = Arc::clone(&handlebars);
-                move || ui_handler(hs, hb)
+                move || ui_handler(hs)
             }),
         )
         .route("/ws", any(ws_handler))
