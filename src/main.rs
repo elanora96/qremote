@@ -24,6 +24,10 @@ struct Args {
     /// Specify the port to listen on
     #[arg(short, long, default_value_t = 3030)]
     port: u16,
+
+    /// Set a custom title
+    #[arg(short, long, default_value = "QRemote")]
+    title: String,
 }
 
 #[tokio::main]
@@ -34,6 +38,7 @@ async fn main() {
         hostname: gethostname(),
         ip: local_ip().unwrap(),
         port: args.port,
+        title: args.title,
     });
 
     let mut app = Router::new()

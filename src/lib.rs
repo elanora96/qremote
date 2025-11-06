@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use enigo::Key;
 use qrcode::{QrCode, render::unicode};
 use serde::Deserialize;
@@ -11,6 +12,7 @@ pub struct HostState {
     pub hostname: OsString,
     pub ip: IpAddr,
     pub port: u16,
+    pub title: String,
 }
 
 impl HostState {
@@ -30,21 +32,19 @@ impl HostState {
 
 #[derive(Debug, Deserialize)]
 pub struct ClientEventMessage {
-    #[serde(rename = "eventType")]
-    event_type: String,
-    #[serde(rename = "clickedKey")]
-    clicked_key: Option<String>,
+    eventType: String,
+    clickedKey: Option<String>,
     // modifiers: Option<Vec<String>>, // TODO
 }
 
 impl ClientEventMessage {
     pub fn execute(&self) {
-        match self.event_type.as_str() {
+        match self.eventType.as_str() {
             "click" => {
-                let ck = self.clicked_key.clone().unwrap();
+                let ck = self.clickedKey.clone().unwrap();
                 media_controls::str_to_keypress(&ck);
             }
-            _ => println!("Unrecognized event_type! {:?}", self.event_type),
+            _ => println!("Unrecognized event_type! {:?}", self.eventType),
         }
     }
 }

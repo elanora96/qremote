@@ -39,7 +39,6 @@ pub async fn static_handler(uri: Uri) -> impl IntoResponse {
 
 pub async fn ui_handler(hs: Arc<HostState>) -> Markup {
     let buttons: Vec<&String> = key_map().keys().collect();
-    let title = "QRemote";
     html! {
         (DOCTYPE)
         head {
@@ -47,7 +46,7 @@ pub async fn ui_handler(hs: Arc<HostState>) -> Markup {
             meta name="viewport" content="width=device-width, initial-scale=1.0";
             link rel="stylesheet" href="/assets/styles.css";
             script type="module" src="/assets/app.js" {}
-            title {(title)}
+            title {(hs.title)}
         }
         body {
             main {
