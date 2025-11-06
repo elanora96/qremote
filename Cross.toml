@@ -1,0 +1,11 @@
+[target.x86_64-pc-windows-gnu]
+image = "cross/x86_64-pc-windows-gnu:sccache"
+
+[build.env]
+passthrough = [
+    "SCCACHE_ERROR_LOG",
+    "SCCACHE_LOG",
+    "SCCACHE_AZURE_CONNECTION_STRING",
+    "SCCACHE_AZURE_BLOB_CONTAINER",
+    "SCCACHE_DIR",
+]

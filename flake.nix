@@ -29,6 +29,7 @@
         inputs.rust-flake.flakeModules.nixpkgs
         inputs.treefmt-nix.flakeModule
         inputs.git-hooks-nix.flakeModule
+        ./cross.nix
       ];
       perSystem =
         {
