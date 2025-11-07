@@ -1,7 +1,7 @@
 [package]
 name = "qremote"
 description = "A multi-platform (Linux (X11/Wayland), MacOS, and Windows) zero setup remote for any computer you're playing media on."
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 
 [dependencies]
