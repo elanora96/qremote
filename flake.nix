@@ -42,7 +42,6 @@
           name = "qremote";
         in
         {
-
           rust-project = {
             src =
               let
@@ -68,13 +67,18 @@
               ];
             };
           };
+
           packages.default = self'.packages.qremote;
+
           devShells.default = pkgs.mkShell {
+            inherit (config.pre-commit) shellHook;
             name = "${name}-shell";
             inputsFrom = [
               self'.devShells.rust
             ];
+            packages = config.pre-commit.settings.enabledPackages;
           };
+
           pre-commit.settings.hooks = {
             cargo-check.enable = true;
             clippy.enable = true;
