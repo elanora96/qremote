@@ -71,22 +71,26 @@
           packages.default = self'.packages.qremote;
 
           devShells.default = pkgs.mkShell {
-            inherit (config.pre-commit) shellHook;
             name = "${name}-shell";
             inputsFrom = [
               self'.devShells.rust
+              config.treefmt.build.devShell
+              config.pre-commit.devShell
             ];
-            packages = config.pre-commit.settings.enabledPackages;
           };
 
-          pre-commit.settings.hooks = {
-            cargo-check.enable = true;
-            clippy.enable = true;
-            treefmt.enable = true;
+          pre-commit = {
+            check.enable = true;
+            settings.hooks = {
+              cargo-check.enable = true;
+              clippy.enable = true;
+              treefmt.enable = true;
+            };
           };
 
           treefmt = {
             projectRootFile = "rust-toolchain.toml"; # Used to find the project root
+            flakeCheck = false; # pre-commit-hooks checks this
             programs = {
               rustfmt = {
                 enable = true;
