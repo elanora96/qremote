@@ -9,7 +9,8 @@ pub fn str_to_key(input: &str) -> Result<Key, &str> {
 }
 
 pub fn str_to_keypress(input: &str) {
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    let mut enigo =
+        Enigo::new(&Settings::default()).expect("Failed to initialize Enigo input simulation");
 
     match str_to_key(input) {
         Ok(k) => match enigo.key(k, Click) {

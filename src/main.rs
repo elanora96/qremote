@@ -36,7 +36,7 @@ async fn main() {
 
     let host_state = Arc::new(HostState {
         hostname: gethostname(),
-        ip: local_ip().unwrap(),
+        ip: local_ip().expect("Failed to discern local IP address"),
         port: args.port,
         title: args.title,
     });

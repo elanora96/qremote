@@ -21,7 +21,7 @@ impl HostState {
     }
 
     pub fn get_qrcode_image(&self) -> String {
-        let qrcode = QrCode::new(&self.get_remote_url()).unwrap();
+        let qrcode = QrCode::new(self.get_remote_url()).expect("Failed to create a QrCode");
         qrcode.render::<unicode::Dense1x2>().build()
     }
 
@@ -40,10 +40,10 @@ pub struct ClientEventMessage {
 impl ClientEventMessage {
     pub fn execute(&self) {
         match self.eventType.as_str() {
-            "click" => {
-                let ck = self.clickedKey.clone().unwrap();
-                media_controls::str_to_keypress(&ck);
-            }
+            "click" => match &self.clickedKey {
+                Some(ck) => media_controls::str_to_keypress(ck),
+                None => println!("Unable to click key"),
+            },
             _ => println!("Unrecognized event_type! {:?}", self.eventType),
         }
     }
