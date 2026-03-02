@@ -11,7 +11,7 @@
     };
     systems.url = "github:nix-systems/default";
     rust-flake = {
-      url = "github:elanora96/rust-flake";
+      url = "github:juspay/rust-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix = {
