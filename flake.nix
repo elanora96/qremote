@@ -60,11 +60,13 @@
               buildInputs = with pkgs; [
                 pkg-config
               ];
-              nativeBuildInputs = with pkgs; [
-                pkg-config
-                (libxkbcommon.override { withWaylandTools = true; })
-                xdotool
-              ];
+              nativeBuildInputs =
+                with pkgs;
+                [ pkg-config ]
+                ++ (lib.optionals (!stdenv.isDarwin) [
+                  (libxkbcommon.override { withWaylandTools = true; })
+                  xdotool
+                ]);
             };
           };
 
