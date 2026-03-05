@@ -11,19 +11,46 @@ permissions:
   contents: write
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
+  build:
+    name: build ${{ matrix.variant }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: ubuntu-latest
+            os: ubuntu-latest
+            build: |
+              nix develop -c cargo build --release --verbose
+              mv ./target/release/qremote ./target/release/qremote-"$(uname -sm)"
+            test: nix develop -c cargo check --verbose --all-features
+          - variant: macos-latest
+            os: macos-latest
+            build: |
+              nix develop -c cargo build --release --verbose
+              mv ./target/release/qremote ./target/release/qremote-"$(uname -sm)"
+            test: nix develop -c cargo check --verbose --all-features
+          - variant: windows-latest
+            os: windows-latest
+            build: |
+              cargo build --release --verbose
+              Rename-Item -Path "./target/release/qremote.exe" -NewName "./target/release/qremote-windows.exe"
+            test: cargo test --verbose --all-features
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Nix
-        uses: cachix/install-nix-action@v30
+        if: ${{ matrix.os }} == "ubuntu-latest" || ${{ matrix.os }} == "macos-latest"
+        uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: nix develop -c cargo build --release
+      - name: Build
+        run: ${{ matrix.build }}
+      - name: Test
+        run: ${{ matrix.test }}
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ./target/release/qremote
+            ./target/release/qremote-*
